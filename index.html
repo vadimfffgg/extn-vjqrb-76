@@ -19,13 +19,10 @@
             --radius: 18px;
             --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             --danger: #d84b4b;
+            --segment-bg: #1a1a1a;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             background: var(--bg);
@@ -35,8 +32,10 @@
             -webkit-font-smoothing: antialiased;
             display: flex;
             justify-content: center;
-            padding: 2rem 1rem 4rem;
+            padding: 1.5rem 1rem 4rem;
             min-height: 100vh;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
 
         .app {
@@ -44,9 +43,10 @@
             max-width: 720px;
             display: flex;
             flex-direction: column;
-            gap: 2.2rem;
+            gap: 1.8rem;
         }
 
+        /* Анимации */
         @keyframes fadeUp {
             from { opacity: 0; transform: translateY(16px); }
             to { opacity: 1; transform: translateY(0); }
@@ -59,243 +59,174 @@
             from { opacity: 1; transform: translateX(0); }
             to { opacity: 0; transform: translateX(60px); }
         }
-        .anim-fade-up {
-            animation: fadeUp 0.5s ease forwards;
+        @keyframes shimmer {
+            0% { background-position: -200px 0; }
+            100% { background-position: 200px 0; }
         }
-        .anim-scale-in {
-            animation: scaleIn 0.35s ease forwards;
+        .anim-fade-up { animation: fadeUp 0.5s ease forwards; }
+        .anim-scale-in { animation: scaleIn 0.35s ease forwards; }
+
+        /* Стильный переключатель как в iPhone */
+        .segment-control {
+            display: flex;
+            background: #111;
+            border-radius: 12px;
+            padding: 3px;
+            border: 1px solid #222;
+            position: relative;
+            width: fit-content;
+            align-self: center;
+        }
+        .segment-option {
+            padding: 0.55rem 1.6rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
+            z-index: 1;
+            color: #777;
+            position: relative;
+            white-space: nowrap;
+            letter-spacing: -0.2px;
+        }
+        .segment-option.active {
+            color: #fff;
+        }
+        .segment-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            height: calc(100% - 6px);
+            background: #222;
+            border-radius: 10px;
+            transition: all 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+            border: 1px solid #333;
         }
 
+        /* Профиль */
         .profile-header {
             display: flex;
             align-items: center;
-            gap: 1.2rem;
-            padding-bottom: 1.2rem;
+            gap: 1rem;
+            padding-bottom: 1rem;
             border-bottom: 1px solid var(--border);
         }
         .avatar {
-            width: 72px;
-            height: 72px;
+            width: 64px;
+            height: 64px;
             border-radius: 50%;
             background: #1a1a1a;
             border: 2px solid #2a2a2a;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            cursor: pointer;
             background-size: cover;
             background-position: center;
+            cursor: pointer;
+            flex-shrink: 0;
             box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px #1f1f1f;
             transition: var(--transition);
-            flex-shrink: 0;
-        }
-        .avatar:hover {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent-glow);
-        }
-        .car-name {
-            font-size: 1.7rem;
-            font-weight: 700;
-            color: #fff;
-        }
-        .car-name .model {
-            color: var(--accent);
-        }
-        .car-details {
             display: flex;
-            gap: 1.5rem;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            margin-top: 0.2rem;
-        }
-
-        .account-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.6rem;
             align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
         }
+        .avatar:hover { border-color: var(--accent); }
+        .car-name { font-size: 1.6rem; font-weight: 700; color: #fff; }
+        .car-name .model { color: var(--accent); }
+        .car-details { font-size: 0.85rem; color: var(--text-secondary); display: flex; gap: 1rem; margin-top: 0.2rem; }
+
+        .account-list { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; }
         .account-chip {
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            background: var(--surface);
-            border: 1px solid #222;
-            border-radius: 40px;
-            padding: 0.35rem 1rem 0.35rem 0.4rem;
-            cursor: pointer;
-            transition: var(--transition);
-            font-weight: 500;
-            font-size: 0.85rem;
-            position: relative;
+            display: flex; align-items: center; gap: 0.4rem;
+            background: var(--surface); border: 1px solid #222;
+            border-radius: 40px; padding: 0.3rem 0.9rem 0.3rem 0.4rem;
+            cursor: pointer; transition: var(--transition); font-weight: 500; font-size: 0.82rem;
         }
-        .account-chip.active {
-            border-color: var(--accent);
-            background: #1a1a1a;
-            box-shadow: 0 0 12px var(--accent-glow);
-        }
+        .account-chip.active { border-color: var(--accent); background: #1a1a1a; box-shadow: 0 0 10px var(--accent-glow); }
         .chip-avatar {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background-size: cover;
-            background-position: center;
-            background-color: #222;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 28px; height: 28px; border-radius: 50%;
+            background-size: cover; background-position: center; background-color: #222;
+            display: flex; align-items: center; justify-content: center; font-size: 0.8rem;
         }
-        .chip-delete {
-            margin-left: 0.2rem;
-            color: #666;
-            font-weight: bold;
-            cursor: pointer;
-            padding: 0 0.3rem;
-            border-radius: 50%;
-            transition: var(--transition);
-            font-size: 0.9rem;
-            line-height: 1;
-        }
-        .chip-delete:hover {
-            color: var(--danger);
-            background: rgba(216,75,75,0.15);
-        }
+        .chip-delete { margin-left: 0.2rem; color: #666; cursor: pointer; padding: 0 0.3rem; border-radius: 50%; transition: var(--transition); }
+        .chip-delete:hover { color: var(--danger); background: rgba(216,75,75,0.15); }
 
-        .gallery {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
+        /* Галерея */
+        .gallery { display: flex; flex-direction: column; gap: 1.2rem; }
         .card {
-            background: var(--surface);
-            border: 1px solid #1a1a1a;
-            border-radius: var(--radius);
-            padding: 1.2rem;
-            transition: var(--transition);
-            animation: fadeUp 0.4s ease forwards;
-            opacity: 0;
+            background: var(--surface); border: 1px solid #1a1a1a;
+            border-radius: var(--radius); padding: 1rem;
+            transition: var(--transition); animation: fadeUp 0.4s ease forwards; opacity: 0;
         }
-        .card.removing {
-            animation: slideOutRight 0.3s ease forwards;
-        }
+        .card.removing { animation: slideOutRight 0.3s ease forwards; }
         .card-photo {
-            width: 100%;
-            aspect-ratio: 16/9;
-            border-radius: 12px;
-            margin: 0.8rem 0;
-            background: #1a1a1a;
-            background-size: cover;
-            background-position: center;
-            border: 1px solid #222;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #444;
+            width: 100%; aspect-ratio: 16/9; border-radius: 12px;
+            margin: 0.7rem 0; background: #1a1a1a; background-size: cover;
+            background-position: center; border: 1px solid #222;
+            display: flex; align-items: center; justify-content: center; color: #444;
         }
-        .notes {
-            font-size: 0.9rem;
-            color: #aaa;
-            background: #111;
-            padding: 0.7rem 1rem;
-            border-radius: 10px;
-            border-left: 3px solid var(--accent);
-        }
-        .delete-btn {
-            background: none;
-            border: none;
-            color: #555;
-            cursor: pointer;
-            padding: 0.3rem 0.6rem;
-            border-radius: 20px;
-            transition: var(--transition);
-        }
-        .delete-btn:hover {
-            color: #e05555;
-            background: #1a1111;
-        }
+        .notes { font-size: 0.85rem; color: #aaa; background: #111; padding: 0.6rem 0.9rem; border-radius: 10px; border-left: 3px solid var(--accent); }
+        .delete-btn { background: none; border: none; color: #555; cursor: pointer; padding: 0.3rem 0.6rem; border-radius: 20px; transition: var(--transition); }
+        .delete-btn:hover { color: #e05555; background: #1a1111; }
 
-        .stats {
+        /* Статистика в стиле iPhone */
+        .stats-dual {
             display: grid;
-            grid-template-columns: repeat(3,1fr);
-            gap: 1rem;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
             background: var(--surface);
             border: 1px solid #1c1c1c;
             border-radius: var(--radius);
-            padding: 1.5rem;
+            padding: 1.2rem;
         }
-        .stat-value {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #fff;
+        .stat-card {
+            background: #0c0c0c;
+            border-radius: 14px;
+            padding: 1rem;
+            border: 1px solid #1a1a1a;
+        }
+        .stat-card .label {
+            font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;
+            color: #777; margin-bottom: 0.3rem;
+        }
+        .stat-card .value {
+            font-size: 1.8rem; font-weight: 700; color: #fff;
+            display: flex; align-items: baseline; gap: 0.2rem;
+        }
+        .stat-card .value .unit { font-size: 0.9rem; color: #888; font-weight: 500; }
+        .stat-card .sub {
+            font-size: 0.8rem; color: #666; margin-top: 0.2rem;
         }
 
         .btn {
-            background: #141414;
-            border: 1px solid #2a2a2a;
-            color: #ccc;
-            padding: 0.7rem 1.5rem;
-            border-radius: 40px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
+            background: #141414; border: 1px solid #2a2a2a; color: #ccc;
+            padding: 0.6rem 1.3rem; border-radius: 40px; font-weight: 600;
+            cursor: pointer; transition: var(--transition); font-size: 0.85rem;
         }
-        .btn.primary {
-            background: var(--accent);
-            border-color: var(--accent);
-            color: #000;
-        }
-        .btn.danger {
-            border-color: #5a2a2a;
-            color: #d84b4b;
-            background: #1a1111;
-        }
-        .btn.danger:hover {
-            background: #2a1515;
-            border-color: var(--danger);
-        }
+        .btn.primary { background: var(--accent); border-color: var(--accent); color: #000; }
+        .btn.primary:hover { background: #ff8c3a; }
 
         .modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(6px);
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(6px);
+            align-items: center; justify-content: center; z-index: 100;
         }
-        .modal.active {
-            display: flex;
-        }
+        .modal.active { display: flex; }
         .modal-content {
-            background: #121212;
-            border: 1px solid #2a2a2a;
-            border-radius: 24px;
-            padding: 2rem;
-            width: 90%;
-            max-width: 420px;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            animation: scaleIn 0.3s ease;
+            background: #121212; border: 1px solid #2a2a2a; border-radius: 24px;
+            padding: 1.8rem; width: 90%; max-width: 420px;
+            display: flex; flex-direction: column; gap: 1rem; animation: scaleIn 0.3s ease;
         }
         input, textarea {
-            background: #1a1a1a;
-            border: 1px solid #2a2a2a;
-            border-radius: 10px;
-            padding: 0.8rem;
-            color: #fff;
-            font-family: inherit;
-            width: 100%;
+            background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px;
+            padding: 0.7rem; color: #fff; font-family: inherit; width: 100%;
         }
-        .footer {
-            text-align: center;
-            color: #444;
-            font-size: 0.8rem;
-            margin-top: 2rem;
-            border-top: 1px solid #1a1a1a;
-            padding-top: 1.5rem;
+        .footer { text-align: center; color: #444; font-size: 0.8rem; margin-top: 1.5rem; border-top: 1px solid #1a1a1a; padding-top: 1.2rem; }
+
+        .mode-badge {
+            font-size: 0.7rem; background: #1a1a1a; padding: 0.2rem 0.7rem;
+            border-radius: 20px; color: var(--accent); font-weight: 600;
+            display: inline-flex; align-items: center; gap: 0.3rem;
         }
     </style>
 </head>
@@ -305,11 +236,14 @@
 
 <script>
     (() => {
-        const STORAGE_KEY = 'carwash_multi_profile_v3';
+        const STORAGE_KEY = 'carwash_dual_mode_v4';
         let state = {
             profiles: [],
             activeProfileId: null,
-            washes: {}
+            // washes теперь объект с ключами exterior / interior
+            washesExterior: {},
+            washesInterior: {},
+            activeMode: 'exterior' // 'exterior' | 'interior'
         };
 
         function loadState() {
@@ -319,11 +253,11 @@
                     const parsed = JSON.parse(raw);
                     state.profiles = parsed.profiles || [];
                     state.activeProfileId = parsed.activeProfileId || (state.profiles[0]?.id || null);
-                    state.washes = parsed.washes || {};
+                    state.washesExterior = parsed.washesExterior || {};
+                    state.washesInterior = parsed.washesInterior || {};
+                    state.activeMode = parsed.activeMode || 'exterior';
                 } catch (e) { setDemoData(); }
-            } else {
-                setDemoData();
-            }
+            } else { setDemoData(); }
             if (!state.profiles.length) setDemoData();
             if (!state.profiles.find(p => p.id === state.activeProfileId)) {
                 state.activeProfileId = state.profiles[0]?.id || null;
@@ -338,15 +272,22 @@
                 { id: id2, brand: 'Porsche', model: '911 Carrera', year: 2023, avatar: '', mileage: 32100 }
             ];
             state.activeProfileId = id1;
-            state.washes = {
+            state.washesExterior = {
                 [id1]: [
                     { id: 101, date: '2026-07-26', mileage: 48320, photo: '', notes: 'Двухфазная мойка, Gyeon Bathe, воск Soft99.', duration: 50 },
-                    { id: 102, date: '2026-07-10', mileage: 47890, photo: '', notes: 'Бесконтактная мойка Koch Chemie.', duration: 40 },
+                    { id: 102, date: '2026-07-10', mileage: 47890, photo: '', notes: 'Бесконтактная Koch Chemie.', duration: 40 },
                 ],
                 [id2]: [
-                    { id: 201, date: '2026-07-20', mileage: 32100, photo: '', notes: 'Ручная мойка с воском Porsche.', duration: 35 },
+                    { id: 201, date: '2026-07-20', mileage: 32100, photo: '', notes: 'Ручная мойка Porsche.', duration: 35 },
                 ]
             };
+            state.washesInterior = {
+                [id1]: [
+                    { id: 301, date: '2026-07-24', mileage: 48200, photo: '', notes: 'Химчистка сидений, обработка кожи.', duration: 70 },
+                ],
+                [id2]: []
+            };
+            state.activeMode = 'exterior';
             saveState();
         }
 
@@ -359,7 +300,15 @@
         }
 
         function getActiveWashes() {
-            return (state.washes[state.activeProfileId] || []).slice();
+            const storage = state.activeMode === 'exterior' ? state.washesExterior : state.washesInterior;
+            return (storage[state.activeProfileId] || []).slice();
+        }
+
+        function switchMode(mode) {
+            if (state.activeMode === mode) return;
+            state.activeMode = mode;
+            saveState();
+            render();
         }
 
         function switchToProfile(profileId) {
@@ -370,39 +319,26 @@
         }
 
         function deleteProfile(profileId) {
-            if (state.profiles.length <= 1) {
-                alert('Нельзя удалить единственный автомобиль. Добавьте ещё один профиль.');
-                return;
-            }
-            const profile = state.profiles.find(p => p.id === profileId);
-            if (!profile) return;
-            if (!confirm(`Удалить профиль ${profile.brand} ${profile.model} и все его записи о мойках?`)) return;
-
-            state.profiles = state.profiles.filter(p => p.id !== profileId);
-            delete state.washes[profileId];
-
-            if (state.activeProfileId === profileId) {
-                state.activeProfileId = state.profiles[0]?.id || null;
-            }
-            saveState();
-            render();
+            if (state.profiles.length <= 1) { alert('Нельзя удалить единственный автомобиль.'); return; }
+            const p = state.profiles.find(x => x.id === profileId);
+            if (!p || !confirm(`Удалить ${p.brand} ${p.model} и все записи?`)) return;
+            state.profiles = state.profiles.filter(x => x.id !== profileId);
+            delete state.washesExterior[profileId];
+            delete state.washesInterior[profileId];
+            if (state.activeProfileId === profileId) state.activeProfileId = state.profiles[0]?.id || null;
+            saveState(); render();
         }
 
         function deleteWash(washId) {
-            const washes = state.washes[state.activeProfileId] || [];
+            const storage = state.activeMode === 'exterior' ? state.washesExterior : state.washesInterior;
+            const list = storage[state.activeProfileId] || [];
             const card = document.querySelector(`.card[data-wash-id="${washId}"]`);
-            const removeFromState = () => {
-                state.washes[state.activeProfileId] = state.washes[state.activeProfileId].filter(w => w.id !== washId);
-                saveState();
-                render();
+            const remove = () => {
+                storage[state.activeProfileId] = list.filter(w => w.id !== washId);
+                saveState(); render();
             };
-
-            if (card) {
-                card.classList.add('removing');
-                card.addEventListener('animationend', removeFromState, { once: true });
-            } else {
-                removeFromState();
-            }
+            if (card) { card.classList.add('removing'); card.addEventListener('animationend', remove, { once: true }); }
+            else remove();
         }
 
         function formatDate(dateStr, short = false) {
@@ -417,7 +353,7 @@
             const app = document.getElementById('app');
             const profile = getActiveProfile();
             if (!profile) {
-                app.innerHTML = `<div style="text-align:center;padding:3rem;color:#666;">Нет профилей. Создайте первый автомобиль.</div>`;
+                app.innerHTML = `<div style="text-align:center;padding:3rem;color:#666;">Создайте первый автомобиль.</div>`;
                 return;
             }
 
@@ -425,25 +361,41 @@
             const lastWash = washes[0];
             const totalWashes = washes.length;
             const avgTime = totalWashes ? Math.round(washes.reduce((s,w) => s + (w.duration || 45), 0) / totalWashes) : '—';
-            const lastThree = washes.slice(0,3).map(w => formatDate(w.date, true)).join(' · ') || '—';
+
+            // Статистика для обоих режимов
+            const extWashes = (state.washesExterior[state.activeProfileId] || []).length;
+            const intWashes = (state.washesInterior[state.activeProfileId] || []).length;
+            const totalAll = extWashes + intWashes;
 
             const avatarHtml = profile.avatar
                 ? `<div class="avatar" style="background-image:url('${profile.avatar}')" onclick="window.triggerAvatarUpload()"></div>`
-                : `<div class="avatar" onclick="window.triggerAvatarUpload()"><span style="font-size:2rem;">🚗</span></div>`;
+                : `<div class="avatar" onclick="window.triggerAvatarUpload()">🚗</div>`;
 
             const accountsHtml = state.profiles.map(p => `
                 <div class="account-chip ${p.id === state.activeProfileId ? 'active' : ''}" data-profile-id="${p.id}">
                     <div class="chip-avatar" style="${p.avatar ? `background-image:url('${p.avatar}')` : ''}">${p.avatar ? '' : '🚗'}</div>
                     ${p.brand}
-                    <span class="chip-delete" data-delete-profile="${p.id}" title="Удалить авто">×</span>
+                    <span class="chip-delete" data-delete-profile="${p.id}">×</span>
                 </div>
-            `).join('') + `<button class="btn" id="addAccountBtn" style="padding:0.4rem 1.2rem;">+ Добавить</button>`;
+            `).join('') + `<button class="btn" id="addAccountBtn" style="padding:0.35rem 1rem;">+</button>`;
+
+            const modeLabel = state.activeMode === 'exterior' ? 'Кузов' : 'Салон';
+            const modeIcon = state.activeMode === 'exterior' ? '🚗' : '🪑';
+
+            const segmentHTML = `
+                <div class="segment-control" id="segmentControl">
+                    <div class="segment-slider" id="segmentSlider"></div>
+                    <div class="segment-option ${state.activeMode==='exterior'?'active':''}" data-mode="exterior">🚗 Кузов</div>
+                    <div class="segment-option ${state.activeMode==='interior'?'active':''}" data-mode="interior">🪑 Салон</div>
+                </div>
+            `;
 
             const galleryHtml = washes.length ? washes.map((w, i) => `
                 <div class="card" style="animation-delay:${i*0.04}s" data-wash-id="${w.id}">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <span style="color:var(--accent); font-weight:600;">📅 ${formatDate(w.date)}</span>
-                        <span style="color:#aaa;">🏁 ${w.mileage?.toLocaleString() || '—'} км</span>
+                        <span class="mode-badge">${modeIcon} ${modeLabel}</span>
+                        <span style="color:#aaa; font-size:0.8rem;">🏁 ${w.mileage?.toLocaleString() || '—'} км</span>
                         <button class="delete-btn" data-delete-wash="${w.id}">🗑️</button>
                     </div>
                     <div class="card-photo" style="${w.photo ? `background-image:url('${w.photo}')` : ''}">
@@ -451,7 +403,7 @@
                     </div>
                     <div class="notes">🧽 ${w.notes || 'Без заметок'} · ⏱️ ${w.duration || '?'} мин</div>
                 </div>
-            `).join('') : `<div style="color:#555; text-align:center; padding:2rem;">Записей о мойках пока нет</div>`;
+            `).join('') : `<div style="color:#555; text-align:center; padding:2rem;">Нет записей о мойке ${modeLabel.toLowerCase()}а</div>`;
 
             app.innerHTML = `
                 <div class="profile-header anim-fade-up">
@@ -463,24 +415,55 @@
                             <span>Пробег: ${profile.mileage?.toLocaleString() || '—'} км</span>
                         </div>
                     </div>
-                    <button class="btn" id="editProfileBtn">✎ Ред.</button>
+                    <button class="btn" id="editProfileBtn">✎</button>
                 </div>
                 <div class="account-list anim-fade-up">${accountsHtml}</div>
-                <div style="display:flex; gap:1rem; align-items:center;">
-                    <button class="btn primary" id="addWashBtn">➕ Новая мойка</button>
-                    <span style="color:#666; font-size:0.85rem;">${lastWash ? 'Последняя: '+formatDate(lastWash.date) : 'Нет записей'}</span>
+                ${segmentHTML}
+                <div style="display:flex; gap:0.8rem; align-items:center; flex-wrap:wrap;">
+                    <button class="btn primary" id="addWashBtn">➕ Новая запись</button>
+                    <span style="color:#666; font-size:0.8rem;">${lastWash ? 'Последняя: '+formatDate(lastWash.date) : 'Нет записей'}</span>
+                </div>
+                <div class="stats-dual anim-fade-up">
+                    <div class="stat-card">
+                        <div class="label">🚗 Кузов</div>
+                        <div class="value">${extWashes} <span class="unit">моек</span></div>
+                        <div class="sub">Всего записей</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label">🪑 Салон</div>
+                        <div class="value">${intWashes} <span class="unit">чисток</span></div>
+                        <div class="sub">Всего записей</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label">📊 Общее</div>
+                        <div class="value">${totalAll} <span class="unit">записей</span></div>
+                        <div class="sub">Кузов + салон</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label">⏱️ Среднее время</div>
+                        <div class="value">${avgTime} <span class="unit">мин</span></div>
+                        <div class="sub">Режим: ${modeLabel}</div>
+                    </div>
                 </div>
                 <div class="gallery">${galleryHtml}</div>
-                <div class="stats anim-fade-up">
-                    <div><div style="color:#888;">Всего моек</div><div class="stat-value">${totalWashes}</div></div>
-                    <div><div style="color:#888;">Среднее время</div><div class="stat-value">${avgTime} мин</div></div>
-                    <div><div style="color:#888;">Последние 3</div><div style="color:#ccc;">${lastThree}</div></div>
-                </div>
                 <div class="footer">🔧 Сделано своими руками · <a href="#" style="color:#555;">мойка-авто.дневник</a></div>
                 <input type="file" id="avatarInput" accept="image/*" style="display:none" onchange="window.handleAvatarUpload(event)">
             `;
 
-            // Привязка событий
+            // Позиционируем ползунок
+            setTimeout(() => {
+                const slider = document.getElementById('segmentSlider');
+                const activeOption = document.querySelector('.segment-option.active');
+                if (slider && activeOption) {
+                    slider.style.width = activeOption.offsetWidth + 'px';
+                    slider.style.left = activeOption.offsetLeft + 'px';
+                }
+            }, 10);
+
+            // События
+            document.querySelectorAll('.segment-option').forEach(opt => {
+                opt.addEventListener('click', () => switchMode(opt.dataset.mode));
+            });
             document.querySelectorAll('.account-chip').forEach(chip => {
                 chip.addEventListener('click', (e) => {
                     if (e.target.classList.contains('chip-delete')) return;
@@ -488,19 +471,13 @@
                 });
             });
             document.querySelectorAll('.chip-delete').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    deleteProfile(btn.dataset.deleteProfile);
-                });
+                btn.addEventListener('click', (e) => { e.stopPropagation(); deleteProfile(btn.dataset.deleteProfile); });
             });
             document.getElementById('addAccountBtn')?.addEventListener('click', openAddProfileModal);
             document.getElementById('editProfileBtn')?.addEventListener('click', openEditProfileModal);
             document.getElementById('addWashBtn')?.addEventListener('click', openAddWashModal);
             document.querySelectorAll('[data-delete-wash]').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    deleteWash(Number(btn.dataset.deleteWash));
-                });
+                btn.addEventListener('click', (e) => { e.stopPropagation(); deleteWash(Number(btn.dataset.deleteWash)); });
             });
         }
 
@@ -510,30 +487,24 @@
             if (!file) return;
             const reader = new FileReader();
             reader.onload = (ev) => {
-                const profile = getActiveProfile();
-                if (profile) {
-                    profile.avatar = ev.target.result;
-                    saveState();
-                    render();
-                }
+                const p = getActiveProfile();
+                if (p) { p.avatar = ev.target.result; saveState(); render(); }
             };
             reader.readAsDataURL(file);
         };
 
-        function openModal(htmlContent) {
-            document.getElementById('modalContent').innerHTML = htmlContent;
-            document.getElementById('modal').classList.add('active');
-        }
-        function closeModal() { document.getElementById('modal').classList.remove('active'); }
+        function openModal(html) { document.getElementById('modalContent').innerHTML = html; document.getElementById('modal').classList.add('active'); }
+        window.closeModal = () => document.getElementById('modal').classList.remove('active');
 
         function openAddWashModal() {
+            const modeLabel = state.activeMode === 'exterior' ? 'кузова' : 'салона';
             openModal(`
-                <h3 style="color:var(--accent);">Новая запись мойки</h3>
+                <h3 style="color:var(--accent);">Новая запись · ${state.activeMode==='exterior'?'🚗 Кузов':'🪑 Салон'}</h3>
                 <input type="date" id="wDate" value="${new Date().toISOString().slice(0,10)}">
                 <input type="number" id="wMileage" placeholder="Пробег, км">
                 <input type="file" id="wPhoto" accept="image/*">
-                <textarea id="wNotes" placeholder="Заметки (средства, процесс)..."></textarea>
-                <input type="number" id="wDuration" placeholder="Время (мин)" value="40">
+                <textarea id="wNotes" placeholder="Что делал с ${modeLabel}..."></textarea>
+                <input type="number" id="wDuration" placeholder="Время (мин)" value="${state.activeMode==='exterior'?'40':'60'}">
                 <div style="display:flex; gap:1rem; justify-content:flex-end;">
                     <button class="btn" onclick="window.closeModal()">Отмена</button>
                     <button class="btn primary" id="saveWashBtn">Сохранить</button>
@@ -546,16 +517,15 @@
                 const duration = parseInt(document.getElementById('wDuration').value) || 40;
                 const photoFile = document.getElementById('wPhoto').files[0];
                 const finish = (photoData) => {
-                    if (!state.washes[state.activeProfileId]) state.washes[state.activeProfileId] = [];
-                    state.washes[state.activeProfileId].push({
+                    const storage = state.activeMode === 'exterior' ? state.washesExterior : state.washesInterior;
+                    if (!storage[state.activeProfileId]) storage[state.activeProfileId] = [];
+                    storage[state.activeProfileId].push({
                         id: Date.now(), date, mileage: isNaN(mileage) ? null : mileage,
                         notes, duration, photo: photoData || ''
                     });
-                    const profile = getActiveProfile();
-                    if (profile && !isNaN(mileage)) profile.mileage = mileage;
-                    saveState();
-                    render();
-                    closeModal();
+                    const p = getActiveProfile();
+                    if (p && !isNaN(mileage)) p.mileage = mileage;
+                    saveState(); render(); window.closeModal();
                 };
                 if (photoFile) {
                     const r = new FileReader();
@@ -567,63 +537,39 @@
 
         function openAddProfileModal() {
             openModal(`
-                <h3>Добавить автомобиль</h3>
-                <input type="text" id="pBrand" placeholder="Марка">
-                <input type="text" id="pModel" placeholder="Модель">
-                <input type="number" id="pYear" placeholder="Год выпуска">
-                <input type="number" id="pMileage" placeholder="Пробег">
-                <div style="display:flex; gap:1rem;">
-                    <button class="btn" onclick="window.closeModal()">Отмена</button>
-                    <button class="btn primary" id="saveProfileBtn">Создать</button>
-                </div>
+                <h3>Добавить авто</h3>
+                <input type="text" id="pBrand" placeholder="Марка"><input type="text" id="pModel" placeholder="Модель">
+                <input type="number" id="pYear" placeholder="Год"><input type="number" id="pMileage" placeholder="Пробег">
+                <div style="display:flex; gap:1rem;"><button class="btn" onclick="window.closeModal()">Отмена</button><button class="btn primary" id="saveProfileBtn">Создать</button></div>
             `);
             document.getElementById('saveProfileBtn').onclick = () => {
                 const brand = document.getElementById('pBrand').value.trim() || 'Авто';
                 const model = document.getElementById('pModel').value.trim() || '';
-                const year = document.getElementById('pYear').value;
-                const mileage = parseInt(document.getElementById('pMileage').value) || 0;
                 const newId = 'profile_' + Date.now();
-                state.profiles.push({ id: newId, brand, model, year, mileage, avatar: '' });
-                state.washes[newId] = [];
-                state.activeProfileId = newId;
-                saveState();
-                render();
-                closeModal();
+                state.profiles.push({ id: newId, brand, model, year: document.getElementById('pYear').value, mileage: parseInt(document.getElementById('pMileage').value)||0, avatar: '' });
+                state.washesExterior[newId] = []; state.washesInterior[newId] = [];
+                state.activeProfileId = newId; saveState(); render(); window.closeModal();
             };
         }
 
         function openEditProfileModal() {
-            const p = getActiveProfile();
-            if (!p) return;
+            const p = getActiveProfile(); if(!p) return;
             openModal(`
-                <h3>Редактировать профиль</h3>
-                <input type="text" id="eBrand" value="${p.brand}">
-                <input type="text" id="eModel" value="${p.model}">
-                <input type="number" id="eYear" value="${p.year || ''}">
-                <input type="number" id="eMileage" value="${p.mileage || ''}">
-                <div style="display:flex; gap:1rem;">
-                    <button class="btn" onclick="window.closeModal()">Отмена</button>
-                    <button class="btn primary" id="saveEditBtn">Сохранить</button>
-                </div>
+                <h3>Ред. профиль</h3>
+                <input type="text" id="eBrand" value="${p.brand}"><input type="text" id="eModel" value="${p.model}">
+                <input type="number" id="eYear" value="${p.year||''}"><input type="number" id="eMileage" value="${p.mileage||''}">
+                <div style="display:flex; gap:1rem;"><button class="btn" onclick="window.closeModal()">Отмена</button><button class="btn primary" id="saveEditBtn">Сохранить</button></div>
             `);
             document.getElementById('saveEditBtn').onclick = () => {
                 p.brand = document.getElementById('eBrand').value.trim() || p.brand;
                 p.model = document.getElementById('eModel').value.trim() || p.model;
-                p.year = document.getElementById('eYear').value;
-                p.mileage = parseInt(document.getElementById('eMileage').value) || p.mileage;
-                saveState();
-                render();
-                closeModal();
+                p.year = document.getElementById('eYear').value; p.mileage = parseInt(document.getElementById('eMileage').value)||p.mileage;
+                saveState(); render(); window.closeModal();
             };
         }
 
-        window.closeModal = closeModal;
-        window.addEventListener('click', (e) => {
-            if (e.target === document.getElementById('modal')) closeModal();
-        });
-
-        loadState();
-        render();
+        window.addEventListener('click', (e) => { if (e.target === document.getElementById('modal')) window.closeModal(); });
+        loadState(); render();
     })();
 </script>
 </body>
